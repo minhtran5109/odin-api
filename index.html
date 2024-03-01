@@ -5,13 +5,36 @@
   <title>Document</title>
 </head>
 <body>
-  <img src="#">
+  <div>
+    <button>Search</button>
+  </div>
+  <div>
+    <div id="img-placeholder">Image will appear here!</div>
+    <img>
+  </div>
   <script>
     const img = document.querySelector('img');
-    fetch('https://api.giphy.com/v1/gifs/translate?api_key=cKbgMTFIZb432wnfV35vVF8ghxMyuYWR&s=cats', {mode: 'cors'})
-    .then(function(response) {
-      console.log(response.json());
-    });
+    const searchBtn = document.querySelector('button');
+    const imgPlaceholder = document.getElementById("img-placeholder")
+
+    searchBtn.addEventListener('click', () => {
+
+      fetch('https://api.giphy.com/v1/gifs/translate?api_key=cKbgMTFIZb432wnfV35vVFghxMyuYWR&s=cats', {mode: 'cors'})
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(response) {
+        console.log(response);
+        imgPlaceholder.textContent="";
+        img.src = response.data.images.original.url;
+      })
+      .catch(function(error) {
+        let errMsg = 'Failed. There was a problem with the Fetch operation'
+        console.error(errMsg, error);
+        imgPlaceholder.textContent=`${errMsg}`;
+      });
+    })
+
   </script>
 </body>
 </html>
