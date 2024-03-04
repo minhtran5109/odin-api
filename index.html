@@ -21,26 +21,46 @@
     const searchBtn = document.querySelector('button');
     const imgPlaceholder = document.getElementById("img-placeholder")
     const search = document.getElementById("search")
-
-    searchBtn.addEventListener('click', () => {
-      let searchTerm = search.value ? search.value : "random";
-      fetch(`https://api.giphy.com/v1/gifs/translate?api_key=cKbgMTFIZb432wnfV35vVF8ghxMyuYWR&s=${searchTerm}`, {mode: 'cors'})
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(response) {
-        console.log(response);
-        // console.log(response.meta.status)
+    
+    async function getGif(input) {
+      try {
+        const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=cKbgMTFIZb432wnfV35vVF8ghxMyuYWR&s=${input}`, {mode: 'cors'});
+        const gifData = await response.json();
+        // console.log(data)
         imgPlaceholder.textContent="";
-        img.src = response.data.images.original.url;
-      })
-      .catch(function(error) {
+        img.src = gifData.data.images.original.url;
+      } catch (error) {
         let errMsg = 'Failed. There was a problem with the Fetch operation.'
         console.error(errMsg, error.message);
         imgPlaceholder.textContent=`${errMsg}`;
-      });
+      }
+    };
+
+    searchBtn.addEventListener('click', () => {
+      let searchTerm = search.value ? search.value : "random";
+      getGif(searchTerm);
     })
 
   </script>
 </body>
 </html>
+
+
+<!-- searchBtn.addEventListener('click', () => {
+  let searchTerm = search.value ? search.value : "random";
+  fetch(`https://api.giphy.com/v1/gifs/translate?api_key=cKbgMTFIZb432wnfV35vVF8ghxMyuYWR&s=${searchTerm}`, {mode: 'cors'})
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(response) {
+    console.log(response);
+    // console.log(response.meta.status)
+    imgPlaceholder.textContent="";
+    img.src = response.data.images.original.url;
+  })
+  .catch(function(error) {
+    let errMsg = 'Failed. There was a problem with the Fetch operation.'
+    console.error(errMsg, error.message);
+    imgPlaceholder.textContent=`${errMsg}`;
+  });
+}) -->
